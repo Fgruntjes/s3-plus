@@ -16,7 +16,7 @@ const listEmptyBuckets = async () => {
 		text: `Found ${emptyBuckets.length} empty bucket${emptyBuckets.length === 1 ? '' : 's'}.`,
 	});
 
-  console.log(`Empty buckets: ${emptyBuckets.join(', ')}`);
+  if (emptyBuckets.length > 0) console.log(`Empty bucket${emptyBuckets.length === 1 ? '' : 's'}: ${emptyBuckets.join(', ')}`);
   
   return emptyBuckets;
 };
