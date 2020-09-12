@@ -27,9 +27,21 @@ S3 Plus supports buckets with:
 * Bucket policies (soon)
 * Object encryption using SSE-S3 (soon) and SSE-KMS (soon)
 
-## Limitations
+## Usage
 
-S3 Plus will provide a warning and exit early if it is used on buckets with:
+### Rename bucket
+
+`s3-plus rename-bucket --from my-old-bucket --to my-new-bucket`
+
+Please note:
+* The 'to' bucket name must not be taken, and the bucket must not yet exist.
+* The 'from' bucket must be a bucket in your account that your credentials permit full read access to.
+* This command performs a copy/sync under the hood, and may take some time for buckets with many or large objects.
+* Any references to the old bucket in your code will break. If this is important, perform a bucket copy instead, update bucket references and then delete the bucket yourself.
+
+#### Limitations
+
+This command will provide a warning and exit early if it is used on buckets with:
 * Bucket policies
 * Bucket ACLs
 * Versioning enabled
@@ -43,18 +55,6 @@ S3 Plus will provide a warning and exit early if it is used on buckets with:
 * Other miscellaneous settings - S3 website hosting, server access logging, requester pays, etc.
 
 These features are not yet supported, but if one is particularly important to you, please feel free to create an issue or pull request. Some are not possible due to AWS architecture - for example, S3 buckets with customer-managed encryption.
-
-## Usage
-
-### Rename bucket
-
-`s3-plus rename-bucket --from my-old-bucket --to my-new-bucket`
-
-Please note:
-* The 'to' bucket name must not be taken, and the bucket must not yet exist.
-* The 'from' bucket must be a bucket in your account that your credentials permit full read access to.
-* This command performs a copy/sync under the hood, and may take some time for buckets with many or large objects.
-* Any references to the old bucket in your code will break. If this is important, perform a bucket copy instead, update bucket references and then delete the bucket yourself.
 
 ### List all empty buckets in account
 
@@ -80,6 +80,10 @@ Please note:
 * This command may take some time for buckets with many or large objects.
 * This creates a point-in-time copy; any object changes after this point will not be copied.
 
+#### Limitations
+
+This command has the same limitations as `rename-bucket`, see above.
+
 ### Delete bucket, even if not empty (coming soon)
 
 `s3-plus delete-bucket --bucket bucket-to-delete`
@@ -95,3 +99,12 @@ This command deletes the bucket `bucket-to-delete`. If it is non-empty, you will
 This command deletes the three buckets listed above. If any are non-empty, you will be asked to confirm the deletion for each non-empty bucket. You can override this confirmation with the `-f` flag:
 
 `s3-plus delete-buckets -f --buckets bucket-1 bucket-2 bucket-3`
+
+## Known issues
+
+This is an unstable work in progress and should not be used outside of experimental settings.
+
+Some known issues are:
+* Does not handle errors gracefully, such as non-existent source buckets for rename and copy commands.
+* Lacking support for various S3 bucket features such as CRR, versioning, encryption etc.
+* Many more...
