@@ -44,14 +44,16 @@ Please note:
 
 #### Limitations
 
-This command will provide a warning and exit early if it is used on buckets with:
-* Bucket policies
+This command supports:
+* Bucket policies, including policies to make the bucket public - references to the old bucket name in the policy will be replaced with the new bucket name.
+* Bucket default encryption settings (SSE-S3 and SSE-KMS).
+
+This command is untested on buckets with the following, and may produce unexpected results:
 * Bucket ACLs
 * Versioning enabled
 * Objects stored in Glacier or Glacier Deep Archive
 * Cross-account access
-* Many existing references to the bucket
-* Object encryption
+* Many existing references to the bucket in application code
 * Lifecycle rules
 * Gateway endpoints
 * Cross-Region or Same-Region Replication
@@ -93,7 +95,27 @@ Please note:
 
 This command has the same limitations as `rename-bucket`, see above.
 
-### Delete bucket, even if not empty (coming soon)
+### Move bucket between regions
+
+`s3-plus move-bucket --bucket bucket-to-move --new-region eu-west-2`
+
+This command moves the bucket `bucket-to-move` to the eu-west-2 (London) region.
+
+**Important note about moving buckets**: this process can take up to several hours, as AWS must free the bucket name globally.
+
+The move-bucket command works like this under the hood:
+* First, a new, temporary bucket is created in the target region with a randomised name.
+* Data and settings from the origin bucket are synced to the temporary bucket.
+* The origin bucket is deleted, freeing its name.
+* The target bucket is created **with the same name as the original bucket**, which may take several minutes to several hours due to AWS propagation delay in freeing the original bucket name.
+* The data and settings are synced from the temporary bucket to the final, target bucket with the correct name in the new region.
+* The temporary bucket is deleted.
+
+#### Limitations
+
+This command has the same limitations as `rename-bucket`, see above.
+
+### Delete bucket, even if not empty
 
 `s3-plus delete-bucket --bucket bucket-to-delete`
 
