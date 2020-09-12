@@ -1,13 +1,13 @@
 {
   "name": "s3-plus",
-  "version": "1.0.4",
-  "description": "Command line magic for AWS S3: rename, copy and bulk-delete buckets; rename objects; delete all empty buckets in account",
+  "version": "1.0.5",
+  "description": "Command line magic for AWS S3: rename, copy, move and bulk-delete buckets; list and delete empty buckets",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js"
   },
-  "keywords": [],
+  "keywords": ["s3", "aws", "rename s3 bucket", "bucket", "move s3 bucket", "s3 tools", "s3 magic", "s3 plus"],
   "author": "Patrick Brett",
   "license": "ISC",
   "dependencies": {
@@ -19,5 +19,6 @@
   },
   "bin": {
     "s3-plus": "./src/index.js"
-  }
+  },
+  "homepage": "https://github.com/patrickbrett/s3-plus"
 }
