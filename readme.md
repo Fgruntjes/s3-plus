@@ -12,12 +12,14 @@ You must also have the AWS CLI installed and credentials set up for this softwar
 
 ## What can this do?
 
-* Rename buckets (this is not usually possible from the AWS CLI, SDK or console)
-* Make a copy of an existing bucket
+Many things that are not possible from the AWS CLI or console!
+
+* Rename buckets
+* Make point-in-time copies of buckets
 * Delete buckets, even if they aren't empty (you will be asked to confirm!)
-* Bulk-delete buckets, even if they aren't empty
+* Delete many buckets at once
 * List all the empty buckets in your account
-* Clean up account by quickly deleting empty buckets
+* Clean up account by deleting empty buckets
 
 Disclaimer: use at your own risk! No responsibility is taken for lost, corrupted or otherwise damaged data, unexpected charges, or undesired impacts on your AWS account. Please read all notes and disclaimers on each of the commands to see how they work and their limitations. If in doubt, consult the source code, test on unimportant data before using in production, or do not use this software.
 
