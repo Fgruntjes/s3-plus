@@ -2,7 +2,11 @@
 
 ## Installation
 
+Currently, you can clone this repo and run locally with `npm start`. S3 Plus is not yet published, as it is a WIP with various issues needing to be ironed out. Once it is published, you will be able to install with:
+
 `npm i -g s3-plus`
+
+The `s3-plus` command will then become available for you to use.
 
 You must also have the AWS CLI installed and credentials set up for this software to work.
 
