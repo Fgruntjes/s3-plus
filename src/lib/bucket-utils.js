@@ -15,55 +15,85 @@ const awsCli = new AwsWrapper(wrapperOptions);
 
 const s3 = new AWS.S3();
 
-const createBucket = async (toBucket) => {
+const createBucket = async (toBucket, region) => {
 	const loader = ora(`Creating bucket "${toBucket}"...`).start();
 
-	const data = await s3.createBucket({ Bucket: toBucket }).promise();
+	const cb = () =>
+		new Promise(async (resolve, reject) => {
+			try {
+				await s3
+					.createBucket({ Bucket: toBucket, CreateBucketConfiguration: { LocationConstraint: region } })
+					.promise();
+
+				resolve();
+			} catch (e) {
+				if (e.statusCode === 409) {
+					// Bucket name not yet freed, wait for this.
+					loader.stopAndPersist({
+						symbol: '🛠',
+						text: `Bucket name has not yet been freed by AWS. AWS requests that we wait ${Math.floor(
+							e.retryDelay
+						)} seconds before trying again; this process may take 15-20 minutes in total, or sometimes up to a few hours. This is normal and expected for bucket move operations.`,
+					});
+					const waitLoader = ora(
+						`Waiting ${Math.floor(e.retryDelay)} seconds before trying again...`
+					).start();
+
+					setTimeout(() => {
+						waitLoader.stopAndPersist({ symbol: '🙈', text: `Finished waiting, trying again.` });
+						cb();
+					}, e.retryDelay * 1000);
+				}
+			}
+		});
+
+	await cb();
 
 	loader.stopAndPersist({
 		symbol: '👍',
 		text: `Created bucket "${toBucket}".`,
 	});
-	// console.log(data);
 };
 
 const syncBucketPolicy = async (fromBucket, toBucket) => {
-  const loader = ora(`Syncing bucket policy from bucket "${fromBucket}" to bucket "${toBucket}"...`).start();
+	const loader = ora(`Syncing bucket policy from bucket "${fromBucket}" to bucket "${toBucket}"...`).start();
 
-  const policyObj = await s3.getBucketPolicy({ Bucket: fromBucket }).promise()
+  try {
+    const policyObj = await s3.getBucketPolicy({ Bucket: fromBucket }).promise();
 
-  // Replace references to old bucket name in policy with references to new bucket name
-  const policy = policyObj.Policy.replace(new RegExp(`${fromBucket}`, 'g'), toBucket);
-
-  await s3.putBucketPolicy({ Bucket: toBucket, Policy: policy }).promise();
+    // Replace references to old bucket name in policy with references to new bucket name
+    const policy = policyObj.Policy.replace(new RegExp(`${fromBucket}`, 'g'), toBucket);
+  
+    await s3.putBucketPolicy({ Bucket: toBucket, Policy: policy }).promise();
+  } catch(e) {}
 
 	loader.stopAndPersist({
 		symbol: '👍',
 		text: `Synced bucket policy from bucket "${fromBucket}" to bucket "${toBucket}".`,
 	});
-}
+};
 
 const syncBucketEncryption = async (fromBucket, toBucket) => {
-  const loader = ora(`Syncing bucket encryption from bucket "${fromBucket}" to bucket "${toBucket}"...`).start();
+	const loader = ora(`Syncing bucket encryption from bucket "${fromBucket}" to bucket "${toBucket}"...`).start();
 
-  try {
-    const encryption = await s3.getBucketEncryption({ Bucket: fromBucket }).promise()
-  
-    // TODO: replace references to old bucket name in policy with references to new bucket name
-  
-    await s3.putBucketEncryption({ Bucket: toBucket, ServerSideEncryptionConfiguration: encryption }).promise();  
-  } catch(e) {}
-  
+	try {
+		const encryption = await s3.getBucketEncryption({ Bucket: fromBucket }).promise();
+
+		// TODO: replace references to old bucket name in policy with references to new bucket name
+
+		await s3.putBucketEncryption({ Bucket: toBucket, ServerSideEncryptionConfiguration: encryption }).promise();
+	} catch (e) {}
+
 	loader.stopAndPersist({
 		symbol: '👍',
 		text: `Synced bucket encryption from bucket "${fromBucket}" to bucket "${toBucket}".`,
 	});
-}
+};
 
 const syncBucketMeta = async (fromBucket, toBucket) => {
-  await syncBucketPolicy(fromBucket, toBucket);
-  await syncBucketEncryption(fromBucket, toBucket);
-}
+	await syncBucketPolicy(fromBucket, toBucket);
+	await syncBucketEncryption(fromBucket, toBucket);
+};
 
 const syncBucketObjects = async (fromBucket, toBucket) => {
 	const loader = ora(`Syncing objects from bucket "${fromBucket}" to bucket "${toBucket}"...`).start();
@@ -92,7 +122,7 @@ const emptyBucket = async (bucket) => {
 const deleteBuckets = async (buckets) => {
 	const loader = ora(`Deleting ${buckets.length} empty bucket${buckets.length === 1 ? '' : 's'}...`).start();
 
-	const data = await Promise.all(buckets.map(bucket => s3.deleteBucket({ Bucket: bucket }).promise()));
+	const data = await Promise.all(buckets.map((bucket) => s3.deleteBucket({ Bucket: bucket }).promise()));
 
 	loader.stopAndPersist({
 		symbol: '👍',
@@ -133,6 +163,9 @@ const checkIfBucketEmpty = async (bucketName) => {
 	return !Boolean(data.KeyCount);
 };
 
+const getBucketRegion = async (bucketName) =>
+	(await s3.getBucketLocation({ Bucket: bucketName }).promise()).LocationConstraint;
+
 module.exports = {
 	createBucket,
 	syncBucketMeta,
@@ -142,4 +175,5 @@ module.exports = {
 	deleteBuckets,
 	listBuckets,
 	checkIfBucketEmpty,
+	getBucketRegion,
 };

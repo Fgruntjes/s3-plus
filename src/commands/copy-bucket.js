@@ -1,10 +1,12 @@
-const { createBucket, syncBucketMeta, syncBucketObjects } = require('../lib/bucket-utils');
+const { createBucket, syncBucketMeta, syncBucketObjects, getBucketRegion } = require('../lib/bucket-utils');
 
-const copyBucket = async (argv, standalone=true) => {
-  const fromBucket = argv.from;
-  const toBucket = argv.to;
+const copyBucket = async (options, standalone=true) => {
+  const fromBucket = options.from;
+  const toBucket = options.to;
 
-  await createBucket(toBucket);
+  const region = options.region || await getBucketRegion(fromBucket);
+  await createBucket(toBucket, region);
+
   await syncBucketMeta(fromBucket, toBucket);
   await syncBucketObjects(fromBucket, toBucket);
 

@@ -15,6 +15,7 @@ You must also have the AWS CLI installed and credentials set up for this softwar
 Many things that are not possible from the AWS CLI or console!
 
 * Rename buckets
+* Move buckets between regions
 * Make point-in-time copies of buckets
 * Delete buckets, even if they aren't empty (you will be asked to confirm!)
 * Delete many buckets at once
@@ -70,11 +71,17 @@ This command lists all empty buckets in your account.
 
 This command deletes all empty buckets in your account. You will be given a list of empty buckets and asked to confirm the deletion.
 
-### Copy bucket (coming soon)
+### Copy bucket
 
 `s3-plus copy-bucket --from my-old-bucket --to my-new-bucket`
 
 This command creates a new bucket `my-new-bucket` and copies all objects from 'my-old-bucket' over to it.
+
+You can select the region for the bucket copy with the `--region` parameter:
+
+`s3-plus copy-bucket --from my-old-bucket --to my-new-bucket --region eu-west-1`
+
+Otherwise, the region of the source bucket will be used.
 
 Please note:
 * The 'to' bucket name must not be taken, and the bucket must not yet exist.
