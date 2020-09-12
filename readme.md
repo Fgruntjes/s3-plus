@@ -1,1 +1,93 @@
 # S3 Plus
+
+## Installation
+
+`npm i -g s3-plus`
+
+You must also have the AWS CLI installed and credentials set up for this software to work.
+
+## What can this do?
+
+* Rename buckets (this is not usually possible from the AWS CLI, SDK or console)
+* Make a copy of an existing bucket
+* Delete buckets, even if they aren't empty (you will be asked to confirm!)
+* Bulk-delete buckets, even if they aren't empty
+* List all the empty buckets in your account
+* Clean up account by quickly deleting empty buckets
+
+Disclaimer: use at your own risk! No responsibility is taken for lost, corrupted or otherwise damaged data, unexpected charges, or undesired impacts on your AWS account. Please read all notes and disclaimers on each of the commands to see how they work and their limitations. If in doubt, consult the source code, test on unimportant data before using in production, or do not use this software.
+
+## Supported features
+
+S3 Plus supports buckets with:
+* Bucket policies (soon)
+* Object encryption using SSE-S3 (soon) and SSE-KMS (soon)
+
+## Limitations
+
+S3 Plus will provide a warning and exit early if it is used on buckets with:
+* Bucket policies
+* Bucket ACLs
+* Versioning enabled
+* Objects stored in Glacier or Glacier Deep Archive
+* Cross-account access
+* Many existing references to the bucket
+* Object encryption
+* Lifecycle rules
+* Gateway endpoints
+* Cross-Region or Same-Region Replication
+* Other miscellaneous settings - S3 website hosting, server access logging, requester pays, etc.
+
+These features are not yet supported, but if one is particularly important to you, please feel free to create an issue or pull request. Some are not possible due to AWS architecture - for example, S3 buckets with customer-managed encryption.
+
+## Usage
+
+### Renaming buckets
+
+`s3-plus rename-bucket --from my-old-bucket --to my-new-bucket`
+
+Please note:
+* The 'to' bucket name must not be taken, and the bucket must not yet exist.
+* The 'from' bucket must be a bucket in your account that your credentials permit full read access to.
+* This command performs a copy/sync under the hood, and may take some time for buckets with many or large objects.
+* Any references to the old bucket in your code will break. If this is important, perform a bucket copy instead, update bucket references and then delete the bucket yourself.
+
+### Copying buckets (coming soon)
+
+`s3-plus copy-bucket --from my-old-bucket --to my-new-bucket`
+
+This command creates a new bucket `my-new-bucket` and copies all objects from 'my-old-bucket' over to it.
+
+Please note:
+* The 'to' bucket name must not be taken, and the bucket must not yet exist.
+* The 'from' bucket must be a bucket in your account that your credentials permit full read access to.
+* This command may take some time for buckets with many or large objects.
+* This creates a point-in-time copy; any object changes after this point will not be copied.
+
+### Deleting non-empty buckets (coming soon)
+
+`s3-plus delete-bucket --bucket bucket-to-delete`
+
+This command deletes the bucket `bucket-to-delete`. If it is non-empty, you will be asked to confirm the deletion. You can override this confirmation with the `-f` flag:
+
+`s3-plus delete-bucket -f --bucket bucket-to-delete`
+
+### Bulk delete buckets (coming soon)
+
+`s3-plus delete-buckets --buckets bucket-1 bucket-2 bucket-3`
+
+This command deletes the three buckets listed above. If any are non-empty, you will be asked to confirm the deletion for each non-empty bucket. You can override this confirmation with the `-f` flag:
+
+`s3-plus delete-buckets -f --buckets bucket-1 bucket-2 bucket-3`
+
+### List all empty buckets in account (coming soon)
+
+`s3-plus list-empty`
+
+This command lists all empty buckets in your account.
+
+### Delete all empty buckets in account (coming soon)
+
+`s3-plus delete-empty`
+
+This command deletes all empty buckets in your account. You will be given a list of empty buckets and asked to confirm the deletion.

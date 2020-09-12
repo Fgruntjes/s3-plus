@@ -16,17 +16,6 @@ const { Aws: AwsWrapper, Options: AwsWrapperOptions } = require('aws-cli-js');
 const wrapperOptions = new AwsWrapperOptions(accessKeyId, secretAccessKey);
 const awsCli = new AwsWrapper(wrapperOptions);
 
-// awsCli.command('iam list-users').then(function (data) {
-// 	console.log('data = ', data.object);
-// });
-
-// console.log(argv);
-
-const fromBucket = argv.from;
-const toBucket = argv.to;
-
-// console.log(fromBucket, toBucket);
-
 /**
  * Steps:
  * 1. Create new bucket
@@ -39,7 +28,7 @@ const toBucket = argv.to;
 
 const s3 = new AWS.S3();
 
-const createNewBucket = async () => {
+const createNewBucket = async (toBucket) => {
   const loader = ora(`Creating bucket "${toBucket}"...`).start();
 
   const data = await s3.createBucket({ Bucket: toBucket }).promise();
@@ -51,7 +40,7 @@ const createNewBucket = async () => {
   // console.log(data);
 }
 
-const syncToNewBucket = async () => {
+const syncToNewBucket = async (fromBucket, toBucket) => {
   const loader = ora(`Synching from bucket "${fromBucket}" to bucket "${toBucket}"...`).start();
 
   const data = await awsCli.command(`s3 sync s3://${fromBucket} s3://${toBucket}`);
@@ -63,7 +52,7 @@ const syncToNewBucket = async () => {
   // console.log(data);
 }
 
-const emptyOldBucket = async () => {
+const emptyOldBucket = async (fromBucket) => {
   const loader = ora(`Emptying bucket "${fromBucket}"...`).start();
 
   const data = await awsCli.command(`s3 rm s3://${fromBucket} --recursive`);
@@ -75,7 +64,7 @@ const emptyOldBucket = async () => {
   // console.log(data);
 }
 
-const deleteOldBucket = async () => {
+const deleteOldBucket = async (fromBucket) => {
   const loader = ora(`Deleting bucket "${fromBucket}"...`).start();
 
   const data = await s3.deleteBucket({ Bucket: fromBucket }).promise();
@@ -87,9 +76,14 @@ const deleteOldBucket = async () => {
   // console.log(data);
 }
 
-(async () => {
-  await createNewBucket();
-  await syncToNewBucket();
-  await emptyOldBucket();
-  await deleteOldBucket();
-})()
+const renameBucket = async (argv) => {
+  const fromBucket = argv.from;
+  const toBucket = argv.to;
+
+  await createNewBucket(toBucket);
+  await syncToNewBucket(fromBucket, toBucket);
+  await emptyOldBucket(fromBucket);
+  await deleteOldBucket(fromBucket);
+};
+
+module.exports = renameBucket;

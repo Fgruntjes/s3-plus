@@ -1,18 +1,22 @@
 {
-  "name": "s3-bucket-renamer",
+  "name": "s3-plus",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Command line magic for AWS S3: rename, copy and bulk-delete buckets; rename objects; delete all empty buckets in account",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Patrick Brett",
   "license": "ISC",
   "dependencies": {
     "aws-cli-js": "^2.0.6",
     "aws-sdk": "^2.751.0",
     "ora": "^5.1.0",
     "yargs": "^16.0.3"
+  },
+  "bin": {
+    "s3-plus": "./main.js"
   }
 }
