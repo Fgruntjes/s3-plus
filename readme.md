@@ -38,7 +38,7 @@ Please note:
 
 #### Limitations
 
-This command supports:
+This command supports copying the following bucket settings:
 * Bucket policies, including policies to make the bucket public - references to the old bucket name in the policy will be replaced with the new bucket name.
 * Bucket default encryption settings (SSE-S3 and SSE-KMS).
 
