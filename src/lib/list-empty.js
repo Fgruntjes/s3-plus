@@ -1,6 +1,3 @@
-// Does not handle updating API calls to bucket, or updating CRR targets, etc.
-// Also does not handle objects in Glacier.
-
 const { argv } = require('yargs');
 const AWS = require('aws-sdk');
 const ora = require('ora');
@@ -10,32 +7,7 @@ if (profile) {
 	AWS.config.credentials = new AWS.SharedIniFileCredentials({ profile });
 }
 
-const { accessKeyId, secretAccessKey } = AWS.config.credentials;
-
-const { Aws: AwsWrapper, Options: AwsWrapperOptions } = require('aws-cli-js');
-const wrapperOptions = new AwsWrapperOptions(accessKeyId, secretAccessKey);
-const awsCli = new AwsWrapper(wrapperOptions);
-
-// awsCli.command('iam list-users').then(function (data) {
-// 	console.log('data = ', data.object);
-// });
-
-// console.log(argv);
-
-const fromBucket = argv.from;
-const toBucket = argv.to;
-
-// console.log(fromBucket, toBucket);
-
-/**
- * Steps:
- * 1. Create new bucket
- * 2. Sync old bucket with new bucket
- * 3. Empty old bucket
- * 4. Delete old bucket
- */
-
-// TODO: perform pre-checks - permissions, does fromBucket exist, are there any Glacier objects, versioning enabled etc.
+// TODO: perform pre-checks - permissions, etc
 
 const s3 = new AWS.S3();
 
@@ -72,7 +44,9 @@ const listEmptyBuckets = async () => {
 		text: `Found ${emptyBuckets.length} empty bucket${emptyBuckets.length === 1 ? '' : 's'}.`,
 	});
 
-	console.log(`Empty buckets: ${emptyBuckets.join(', ')}`);
+  console.log(`Empty buckets: ${emptyBuckets.join(', ')}`);
+  
+  return emptyBuckets;
 };
 
 module.exports = listEmptyBuckets;
