@@ -119,17 +119,13 @@ This command has the same limitations as `rename-bucket`, see above.
 
 `s3-plus delete-bucket --bucket bucket-to-delete`
 
-This command deletes the bucket `bucket-to-delete`. If it is non-empty, you will be asked to confirm the deletion. You can override this confirmation with the `-f` flag:
-
-`s3-plus delete-bucket -f --bucket bucket-to-delete`
+This command deletes the bucket `bucket-to-delete`. If it is non-empty, you will be asked to confirm the deletion.
 
 ### Bulk delete buckets (coming soon)
 
 `s3-plus delete-buckets --buckets bucket-1 bucket-2 bucket-3`
 
-This command deletes the three buckets listed above. If any are non-empty, you will be asked to confirm the deletion for each non-empty bucket. You can override this confirmation with the `-f` flag:
-
-`s3-plus delete-buckets -f --buckets bucket-1 bucket-2 bucket-3`
+This command deletes the three buckets listed above. If any are non-empty, you will be asked to confirm the deletion for each non-empty bucket.
 
 ## Known issues
 
