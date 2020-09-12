@@ -26,7 +26,17 @@ Disclaimer: use at your own risk! No responsibility is taken for lost, corrupted
 
 ## Usage
 
+### List all empty buckets in account
 
+`s3-plus list-empty`
+
+This command lists all empty buckets in your account.
+
+### Delete all empty buckets in account
+
+`s3-plus delete-empty`
+
+This command deletes all empty buckets in your account. You will be given a list of empty buckets and asked to confirm the deletion.
 
 ### Rename bucket
 
