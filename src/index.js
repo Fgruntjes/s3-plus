@@ -10,4 +10,5 @@ switch (mainCommand) {
   case "rename-bucket": renameBucket(argv); break;
   case "list-empty": listEmpty(); break;
   case "delete-empty": deleteEmptyBuckets(); break;
+  case "delete-bucket": deleteBucket(argv); break;
 }

@@ -42,7 +42,7 @@ These features are not yet supported, but if one is particularly important to yo
 
 ## Usage
 
-### Renaming buckets
+### Rename bucket
 
 `s3-plus rename-bucket --from my-old-bucket --to my-new-bucket`
 
@@ -52,7 +52,19 @@ Please note:
 * This command performs a copy/sync under the hood, and may take some time for buckets with many or large objects.
 * Any references to the old bucket in your code will break. If this is important, perform a bucket copy instead, update bucket references and then delete the bucket yourself.
 
-### Copying buckets (coming soon)
+### List all empty buckets in account
+
+`s3-plus list-empty`
+
+This command lists all empty buckets in your account.
+
+### Delete all empty buckets in account
+
+`s3-plus delete-empty`
+
+This command deletes all empty buckets in your account. You will be given a list of empty buckets and asked to confirm the deletion.
+
+### Copy bucket (coming soon)
 
 `s3-plus copy-bucket --from my-old-bucket --to my-new-bucket`
 
@@ -64,7 +76,7 @@ Please note:
 * This command may take some time for buckets with many or large objects.
 * This creates a point-in-time copy; any object changes after this point will not be copied.
 
-### Deleting non-empty buckets (coming soon)
+### Delete bucket, even if not empty (coming soon)
 
 `s3-plus delete-bucket --bucket bucket-to-delete`
 
@@ -79,15 +91,3 @@ This command deletes the bucket `bucket-to-delete`. If it is non-empty, you will
 This command deletes the three buckets listed above. If any are non-empty, you will be asked to confirm the deletion for each non-empty bucket. You can override this confirmation with the `-f` flag:
 
 `s3-plus delete-buckets -f --buckets bucket-1 bucket-2 bucket-3`
-
-### List all empty buckets in account (coming soon)
-
-`s3-plus list-empty`
-
-This command lists all empty buckets in your account.
-
-### Delete all empty buckets in account (coming soon)
-
-`s3-plus delete-empty`
-
-This command deletes all empty buckets in your account. You will be given a list of empty buckets and asked to confirm the deletion.
