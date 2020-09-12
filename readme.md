@@ -2,13 +2,13 @@
 
 ## Installation
 
-Currently, you can clone this repo and run locally with `npm start`. S3 Plus is not yet published, as it is a WIP with various issues needing to be ironed out. Once it is published, you will be able to install with:
+Install with:
 
 `npm i -g s3-plus`
 
 The `s3-plus` command will then become available for you to use.
 
-You must also have the AWS CLI installed and credentials set up for this software to work.
+You must also have the AWS CLI installed and credentials set up for S3 Plus to work.
 
 ## What can this do?
 
@@ -25,6 +25,8 @@ Many things that are not possible from the AWS CLI or console!
 Disclaimer: use at your own risk! No responsibility is taken for lost, corrupted or otherwise damaged data, unexpected charges, or undesired impacts on your AWS account. Please read all notes and disclaimers on each of the commands to see how they work and their limitations. If in doubt, consult the source code, test on unimportant data before using in production, or do not use this software.
 
 ## Usage
+
+
 
 ### Rename bucket
 
@@ -54,18 +56,6 @@ This command is untested on buckets with the following, and may produce unexpect
 * Other miscellaneous settings - S3 website hosting, server access logging, requester pays, etc.
 
 These features are not yet supported, but if one is particularly important to you, please feel free to create an issue or pull request. Some are not possible due to AWS architecture - for example, S3 buckets with customer-managed encryption.
-
-### List all empty buckets in account
-
-`s3-plus list-empty`
-
-This command lists all empty buckets in your account.
-
-### Delete all empty buckets in account
-
-`s3-plus delete-empty`
-
-This command deletes all empty buckets in your account. You will be given a list of empty buckets and asked to confirm the deletion.
 
 ### Copy bucket
 

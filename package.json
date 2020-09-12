@@ -18,6 +18,6 @@
     "yesno": "^0.3.1"
   },
   "bin": {
-    "s3-plus": "./main.js"
+    "s3-plus": "./src/index.js"
   }
 }
