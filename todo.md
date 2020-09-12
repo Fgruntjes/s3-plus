@@ -1,3 +1,5 @@
+# Tasks to do / in progress:
+
 * Perform permissions check at start of each command
 * Handle exceptions gracefully
 * Add unit tests
