@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const { argv } = require('yargs').array('buckets');
 
 const renameBucket = require('./commands/rename-bucket');
