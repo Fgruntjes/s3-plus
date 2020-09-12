@@ -1,0 +1,18 @@
+{
+  "name": "s3-bucket-renamer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-cli-js": "^2.0.6",
+    "aws-sdk": "^2.751.0",
+    "ora": "^5.1.0",
+    "yargs": "^16.0.3"
+  }
+}
