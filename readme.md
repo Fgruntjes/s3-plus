@@ -1,14 +1,6 @@
 # S3 Plus
 
-## Installation
-
-Install with:
-
-`npm i -g s3-plus`
-
-The `s3-plus` command will then become available for you to use.
-
-You must also have the AWS CLI installed and credentials set up for S3 Plus to work.
+Command line magic for AWS S3: rename, copy, move and bulk-delete buckets; list and delete empty buckets, and more...
 
 ## What can this do?
 
@@ -23,6 +15,16 @@ Many things that are not possible from the AWS CLI or console!
 * Clean up account by deleting empty buckets
 
 Disclaimer: use at your own risk! No responsibility is taken for lost, corrupted or otherwise damaged data, unexpected charges, or undesired impacts on your AWS account. Please read all notes and disclaimers on each of the commands to see how they work and their limitations. If in doubt, consult the source code, test on unimportant data before using in production, or do not use this software.
+
+## Installation
+
+Install with:
+
+`npm i -g s3-plus`
+
+The `s3-plus` command will then become available for you to use.
+
+You must also have the AWS CLI installed and credentials set up for S3 Plus to work.
 
 ## Usage
 
@@ -135,3 +137,5 @@ Some known issues are:
 * Does not handle errors gracefully, such as non-existent source buckets for rename and copy commands.
 * Lacking support for various S3 bucket features such as CRR, versioning, encryption etc.
 * Many more...
+
+Please see [todo.md](todo.md) for a list of functionality and bug fixes currently in progress.
