@@ -1,6 +1,6 @@
 const { createBucket, syncBucketMeta, syncBucketObjects } = require('../lib/bucket-utils');
 
-const copyBucket = async (argv) => {
+const copyBucket = async (argv, standalone=true) => {
   const fromBucket = argv.from;
   const toBucket = argv.to;
 
@@ -8,7 +8,7 @@ const copyBucket = async (argv) => {
   await syncBucketMeta(fromBucket, toBucket);
   await syncBucketObjects(fromBucket, toBucket);
 
-  console.log("Copy successful!");
+  if (standalone) console.log("Copy successful!");
 };
 
 module.exports = copyBucket;

@@ -28,7 +28,7 @@ const createBucket = async (toBucket) => {
 };
 
 const syncBucketPolicy = async (fromBucket, toBucket) => {
-  const loader = ora(`Synching bucket policy from bucket "${fromBucket}" to bucket "${toBucket}"...`).start();
+  const loader = ora(`Syncing bucket policy from bucket "${fromBucket}" to bucket "${toBucket}"...`).start();
 
   const policyObj = await s3.getBucketPolicy({ Bucket: fromBucket }).promise()
 
@@ -39,12 +39,12 @@ const syncBucketPolicy = async (fromBucket, toBucket) => {
 
 	loader.stopAndPersist({
 		symbol: '👍',
-		text: `Synched bucket policy from bucket "${fromBucket}" to bucket "${toBucket}".`,
+		text: `Synced bucket policy from bucket "${fromBucket}" to bucket "${toBucket}".`,
 	});
 }
 
 const syncBucketEncryption = async (fromBucket, toBucket) => {
-  const loader = ora(`Synching bucket encryption from bucket "${fromBucket}" to bucket "${toBucket}"...`).start();
+  const loader = ora(`Syncing bucket encryption from bucket "${fromBucket}" to bucket "${toBucket}"...`).start();
 
   try {
     const encryption = await s3.getBucketEncryption({ Bucket: fromBucket }).promise()
@@ -56,7 +56,7 @@ const syncBucketEncryption = async (fromBucket, toBucket) => {
   
 	loader.stopAndPersist({
 		symbol: '👍',
-		text: `Synched bucket encryption from bucket "${fromBucket}" to bucket "${toBucket}".`,
+		text: `Synced bucket encryption from bucket "${fromBucket}" to bucket "${toBucket}".`,
 	});
 }
 
