@@ -27,14 +27,52 @@ const createBucket = async (toBucket) => {
 	// console.log(data);
 };
 
-const syncBuckets = async (fromBucket, toBucket) => {
-	const loader = ora(`Synching from bucket "${fromBucket}" to bucket "${toBucket}"...`).start();
+const syncBucketPolicy = async (fromBucket, toBucket) => {
+  const loader = ora(`Synching bucket policy from bucket "${fromBucket}" to bucket "${toBucket}"...`).start();
+
+  const policyObj = await s3.getBucketPolicy({ Bucket: fromBucket }).promise()
+
+  // Replace references to old bucket name in policy with references to new bucket name
+  const policy = policyObj.Policy.replace(new RegExp(`${fromBucket}`, 'g'), toBucket);
+
+  await s3.putBucketPolicy({ Bucket: toBucket, Policy: policy }).promise();
+
+	loader.stopAndPersist({
+		symbol: '👍',
+		text: `Synched bucket policy from bucket "${fromBucket}" to bucket "${toBucket}".`,
+	});
+}
+
+const syncBucketEncryption = async (fromBucket, toBucket) => {
+  const loader = ora(`Synching bucket encryption from bucket "${fromBucket}" to bucket "${toBucket}"...`).start();
+
+  try {
+    const encryption = await s3.getBucketEncryption({ Bucket: fromBucket }).promise()
+  
+    // TODO: replace references to old bucket name in policy with references to new bucket name
+  
+    await s3.putBucketEncryption({ Bucket: toBucket, ServerSideEncryptionConfiguration: encryption }).promise();  
+  } catch(e) {}
+  
+	loader.stopAndPersist({
+		symbol: '👍',
+		text: `Synched bucket encryption from bucket "${fromBucket}" to bucket "${toBucket}".`,
+	});
+}
+
+const syncBucketMeta = async (fromBucket, toBucket) => {
+  await syncBucketPolicy(fromBucket, toBucket);
+  await syncBucketEncryption(fromBucket, toBucket);
+}
+
+const syncBucketObjects = async (fromBucket, toBucket) => {
+	const loader = ora(`Syncing objects from bucket "${fromBucket}" to bucket "${toBucket}"...`).start();
 
 	const data = await awsCli.command(`s3 sync s3://${fromBucket} s3://${toBucket}`);
 
 	loader.stopAndPersist({
 		symbol: '👍',
-		text: `Synched from bucket "${fromBucket}" to bucket "${toBucket}".`,
+		text: `Synced objects from bucket "${fromBucket}" to bucket "${toBucket}".`,
 	});
 	// console.log(data);
 };
@@ -97,7 +135,8 @@ const checkIfBucketEmpty = async (bucketName) => {
 
 module.exports = {
 	createBucket,
-	syncBuckets,
+	syncBucketMeta,
+	syncBucketObjects,
 	emptyBucket,
 	deleteBucket,
 	deleteBuckets,
