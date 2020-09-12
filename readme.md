@@ -79,9 +79,11 @@ This command deletes all empty buckets in your account. You will be given a list
 
 This command creates a new bucket `my-new-bucket` and copies all objects from 'my-old-bucket' over to it.
 
-You can select the region for the bucket copy with the `--region` parameter:
+You can select the region for the bucket copy with the `--new-region` parameter:
 
-`s3-plus copy-bucket --from my-old-bucket --to my-new-bucket --region eu-west-1`
+`s3-plus copy-bucket --from my-old-bucket --to my-new-bucket --new-region eu-west-1`
+
+The `--new-region` parameter also works with the `rename-bucket` command.
 
 Otherwise, the region of the source bucket will be used.
 
@@ -110,6 +112,10 @@ The move-bucket command works like this under the hood:
 * The target bucket is created **with the same name as the original bucket**, which may take several minutes to several hours due to AWS propagation delay in freeing the original bucket name.
 * The data and settings are synced from the temporary bucket to the final, target bucket with the correct name in the new region.
 * The temporary bucket is deleted.
+
+**Advice:** this command should only be used when the bucket needs to be moved to a different region but retain its exact name. In all other cases, the following is *much faster*:
+
+`s3-plus rename-bucket --from original-bucket-name --to different-bucket-name --new-region eu-west-2`
 
 #### Limitations
 

@@ -4,7 +4,7 @@ const copyBucket = async (options, standalone=true) => {
   const fromBucket = options.from;
   const toBucket = options.to;
 
-  const region = options.region || await getBucketRegion(fromBucket);
+  const region = options.newRegion || await getBucketRegion(fromBucket);
   await createBucket(toBucket, region);
 
   await syncBucketMeta(fromBucket, toBucket);
