@@ -24,12 +24,6 @@ Many things that are not possible from the AWS CLI or console!
 
 Disclaimer: use at your own risk! No responsibility is taken for lost, corrupted or otherwise damaged data, unexpected charges, or undesired impacts on your AWS account. Please read all notes and disclaimers on each of the commands to see how they work and their limitations. If in doubt, consult the source code, test on unimportant data before using in production, or do not use this software.
 
-## Supported features
-
-S3 Plus supports buckets with:
-* Bucket policies (soon)
-* Object encryption using SSE-S3 (soon) and SSE-KMS (soon)
-
 ## Usage
 
 ### Rename bucket
@@ -40,7 +34,7 @@ Please note:
 * The 'to' bucket name must not be taken, and the bucket must not yet exist.
 * The 'from' bucket must be a bucket in your account that your credentials permit full read access to.
 * This command performs a copy/sync under the hood, and may take some time for buckets with many or large objects.
-* Any references to the old bucket in your code will break. If this is important, perform a bucket copy instead, update bucket references and then delete the bucket yourself.
+* Any references to the old bucket in your code will break. If this is important, perform a bucket copy instead, update bucket references and then delete the old bucket yourself.
 
 #### Limitations
 
